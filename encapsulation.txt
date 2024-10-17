@@ -1,0 +1,138 @@
+using System;
+namespace encap2;
+
+ internal class Program
+{
+    static void Main(string[] args)
+    {
+        Library library = new Library();
+
+        Book book1 = new Book(1, 20, "Kitab1", "komedi");
+        Book book2 = new Book(2, 15, "Kitab2", "bilimkurgu");
+        Book book3 = new Book(3, 25, "Kitab3", "komedi");
+        Book book4 = new Book(4, 30, "Kitab4", "dram");
+
+        library.AddBook(book1);
+        library.AddBook(book2);
+        library.AddBook(book3);
+        library.AddBook(book4);
+
+        Console.WriteLine("Butun kitablar:");
+        library.ShowAllBooks();
+
+        Console.WriteLine("komedi janrinda olan kitablar:");
+        Book[] komedi = library.GetFilteredBooks("komedi");
+        foreach (var book in komedi)
+        {
+            book.ShowInfo();
+        }
+
+        Console.WriteLine("20-25 araligindaki qiymete uygun kitablar:");
+        Book[] qiymetaraliqi = library.GetFilteredBooks(20, 25);
+        foreach (var book in qiymetaraliqi)
+        {
+            book.ShowInfo();
+        }
+    }
+}
+
+
+
+
+
+class Product
+{
+    private int price;
+    private int count;
+    public int No { get; set; }
+    public string Name { get; set; }
+
+    public int Price
+    {
+        get { return price; }
+        set { if (value >= 0) price = value; }
+    }
+
+    public int Count
+    {
+        get { return count; }
+        set { if (value >= 0) count = value; }
+    }
+
+    public Product(int no, int price, string name)
+    {
+        No = no;
+        Price = price;
+        Name = name;
+    }
+}
+
+class Book : Product
+{
+    public string Genre { get; set; }
+
+    public Book(int no, int price, string name, string genre) : base(no, price, name)
+    {
+        Genre = genre;
+    }
+
+    public void ShowInfo()
+    {
+        Console.WriteLine($"No: {No}, Name: {Name}, Price: {Price}, Genre: {Genre}");
+    }
+}
+
+class Library
+{
+    public Book[] Books = new Book[0];
+
+    public void AddBook(Book book)
+    {
+        int newSize = Books.Length + 1;
+        Array.Resize(ref Books, newSize);
+        Books[newSize - 1] = book;
+    }
+
+    public Book[] GetFilteredBooks(string genre)
+    {
+        Book[] filteredBooks = new Book[0];
+        foreach (var book in Books)
+        {
+            if (book.Genre == genre)
+            {
+                int newSize = filteredBooks.Length + 1;
+                Array.Resize(ref filteredBooks, newSize);
+                filteredBooks[newSize - 1] = book;
+            }
+        }
+        return filteredBooks;
+    }
+
+    public Book[] GetFilteredBooks(int minPrice, int maxPrice)
+    {
+        Book[] filteredBooks = new Book[0];
+        foreach (var book in Books)
+        {
+            if (book.Price >= minPrice && book.Price <= maxPrice)
+            {
+                int newSize = filteredBooks.Length + 1;
+                Array.Resize(ref filteredBooks, newSize);
+                filteredBooks[newSize - 1] = book;
+            }
+        }
+        return filteredBooks;
+    }
+
+    public void ShowAllBooks()
+    {
+        foreach (var book in Books)
+        {
+            book.ShowInfo();
+        }
+    }
+}
+
+
+
+
+
